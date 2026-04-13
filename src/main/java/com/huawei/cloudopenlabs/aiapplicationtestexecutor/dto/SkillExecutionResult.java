@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 /**
- * Skill执行结果
- * 包含执行完成后的所有信息
+ * Skill execution result
+ * Contains all information after execution is completed
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * AI代理执行策略（骨架实现）
+ * AI Agent execution strategy (skeleton implementation)
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -29,19 +29,19 @@ public class AIAgentSkillExecutionStrategy implements SkillExecutionStrategy {
 
     @Override
     public String getStrategyName() {
-        return "AI代理执行策略";
+        return "AI Agent execution strategy";
     }
 
     @Override
     public SkillExecutionResult execute(SkillExecutionRequest request) {
-        log.info("执行AI代理: skillId={}, skillName={}",
+        log.info("Executing AI Agent: skillId={}, skillName={}",
                 request.getSkillId(), request.getSkillName());
 
         long startTime = System.currentTimeMillis();
 
         try {
-            // TODO: 实现真正的AI代理执行逻辑
-            log.warn("AI代理执行策略尚未完全实现，返回模拟结果");
+            // TODO: Implement actual AI Agent execution logic
+            log.warn("AI Agent execution strategy not fully implemented, returning simulated result");
 
             Map<String, Object> outputs = new HashMap<>();
             if (request.getInputParameters() != null) {
@@ -64,14 +64,14 @@ public class AIAgentSkillExecutionStrategy implements SkillExecutionStrategy {
             }
 
             long durationMs = System.currentTimeMillis() - startTime;
-            log.info("AI代理执行完成(模拟): skillId={}, durationMs={}, outputs={}",
+            log.info("AI Agent execution completed (simulated): skillId={}, durationMs={}, outputs={}",
                     request.getSkillId(), durationMs, outputs);
 
-            return SkillExecutionResult.success(outputs, "AI代理执行完成(模拟)", durationMs);
+            return SkillExecutionResult.success(outputs, "AI Agent execution completed (simulated)", durationMs);
 
         } catch (Exception e) {
-            log.error("AI代理执行异常: skillId={}", request.getSkillId(), e);
-            return SkillExecutionResult.failure("AI代理执行失败: " + e.getMessage());
+            log.error("AI Agent execution exception: skillId={}", request.getSkillId(), e);
+            return SkillExecutionResult.failure("AI Agent execution failed: " + e.getMessage());
         }
     }
 }

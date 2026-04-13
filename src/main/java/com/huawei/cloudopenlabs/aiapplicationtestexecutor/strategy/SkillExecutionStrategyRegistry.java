@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Skill执行策略注册表
+ * Skill execution strategy registry
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -28,28 +28,28 @@ public class SkillExecutionStrategyRegistry {
         strategies.forEach(strategy -> {
             String type = strategy.getExecutionType();
             if (strategyMap.containsKey(type)) {
-                log.warn("覆盖已存在的Skill执行策略: type={}, oldStrategy={}, newStrategy={}",
+                log.warn("Overwriting existing Skill execution strategy: type={}, oldStrategy={}, newStrategy={}",
                         type,
                         strategyMap.get(type).getStrategyName(),
                         strategy.getStrategyName());
             }
             strategyMap.put(type, strategy);
-            log.info("注册Skill执行策略: type={}, strategy={}",
+            log.info("Registered Skill execution strategy: type={}, strategy={}",
                     type, strategy.getStrategyName());
         });
 
         if (strategyMap.isEmpty()) {
-            log.warn("没有注册任何Skill执行策略");
+            log.warn("No Skill execution strategies registered");
         }
     }
 
     /**
-     * 获取执行策略，默认返回AUTOMATED策略
+     * Get execution strategy, defaults to AUTOMATED strategy
      */
     public SkillExecutionStrategy getStrategy(String executionType) {
         SkillExecutionStrategy strategy = strategyMap.get(executionType);
         if (strategy == null) {
-            log.warn("未找到执行类型 {} 对应的策略，使用默认AUTOMATED策略", executionType);
+            log.warn("No strategy found for execution type {}, falling back to default AUTOMATED strategy", executionType);
             return strategyMap.get("AUTOMATED");
         }
         return strategy;

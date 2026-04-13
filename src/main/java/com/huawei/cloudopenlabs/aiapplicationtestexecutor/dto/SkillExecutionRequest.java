@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Skill执行请求
- * 包含执行所需的所有信息，不依赖数据库连接
+ * Skill execution request
+ * Contains all information required for execution, no database dependency
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -29,41 +29,41 @@ public class SkillExecutionRequest {
     private String skillName;
     private String description;
 
-    /** 执行类型: AUTOMATED / AI */
+    /** Execution type: AUTOMATED / AI */
     private String executionType;
 
-    /** 执行位置: SERVICE / CLIENT */
+    /** Execution location: SERVICE / CLIENT */
     private String executionLocation;
 
-    /** 超时时间（毫秒） */
+    /** Timeout (milliseconds) */
     private Long timeoutMs;
 
-    /** 执行套件文件路径 */
+    /** Execution suite file path */
     private String suitePath;
 
-    /** 执行套件文件名 */
+    /** Execution suite filename */
     private String suiteFilename;
 
-    /** 执行套件内容（ZIP格式的字节数组，通过Kafka传输时自动base64编解码） */
+    /** Execution suite content (ZIP byte array, auto base64 encoded/decoded via Kafka) */
     private byte[] suiteContent;
 
-    /** 入口脚本文件名 */
+    /** Entry script filename */
     private String entryScript;
 
-    /** 输入参数定义 */
+    /** Input parameter definitions */
     private List<SkillParameterDef> inputParameters;
 
-    /** 输出参数定义 */
+    /** Output parameter definitions */
     private List<SkillParameterDef> outputParameters;
 
-    /** 实际输入参数值 */
+    /** Actual input parameter values */
     private Map<String, Object> inputs;
 
-    /** 执行上下文信息 */
+    /** Execution context information */
     private Map<String, String> context;
 
     /**
-     * Skill参数定义
+     * Skill parameter definition
      */
     @Data
     @Builder

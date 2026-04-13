@@ -25,8 +25,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * 自动化脚本执行策略
- * 执行zip压缩的执行套件
+ * Automated script execution strategy
+ * Executes ZIP-compressed execution suites
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -45,44 +45,44 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
 
     @Override
     public String getStrategyName() {
-        return "自动化脚本执行策略";
+        return "Automated script execution strategy";
     }
 
     @Override
     public SkillExecutionResult execute(SkillExecutionRequest request) {
-        log.info("执行自动化脚本: skillId={}, skillName={}",
+        log.info("Executing automated script: skillId={}, skillName={}",
                 request.getSkillId(), request.getSkillName());
 
         long startTime = System.currentTimeMillis();
         Path workDir = null;
 
         try {
-            // 1. 验证套件内容
+            // 1. Validate suite content
             if (request.getSuiteContent() == null || request.getSuiteContent().length == 0) {
-                return SkillExecutionResult.failure("执行套件内容为空");
+                return SkillExecutionResult.failure("Execution suite content is empty");
             }
 
-            // 2. 创建临时工作目录
+            // 2. Create temporary working directory
             workDir = Files.createTempDirectory("skill_exec_" + request.getSkillId());
-            log.debug("创建临时工作目录: {}", workDir);
+            log.debug("Created temporary working directory: {}", workDir);
 
-            // 3. 解压执行套件
+            // 3. Unzip execution suite
             List<String> scriptFiles = unzipSuite(request.getSuiteContent(), workDir);
             if (scriptFiles.isEmpty()) {
-                return SkillExecutionResult.failure("执行套件中没有找到脚本文件");
+                return SkillExecutionResult.failure("No script files found in execution suite");
             }
 
-            // 4. 查找入口脚本
+            // 4. Find entry script
             String entryScript = findEntryScript(scriptFiles, request.getSkillName());
             if (entryScript == null) {
-                return SkillExecutionResult.failure("未找到可执行的Python脚本");
+                return SkillExecutionResult.failure("No executable Python script found");
             }
-            log.info("找到入口脚本: {}", entryScript);
+            log.info("Found entry script: {}", entryScript);
 
-            // 5. 构建命令行参数
+            // 5. Build command line arguments
             List<String> commandArgs = buildCommandArgs(request.getInputParameters());
 
-            // 6. 执行脚本
+            // 6. Execute script
             ScriptExecutionResult execResult = executeScript(
                     workDir.resolve(entryScript),
                     commandArgs,
@@ -91,20 +91,20 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
             );
 
             if (!execResult.isSuccess()) {
-                return SkillExecutionResult.failure("脚本执行失败: " + execResult.getErrorMessage());
+                return SkillExecutionResult.failure("Script execution failed: " + execResult.getErrorMessage());
             }
 
-            // 7. 解析输出结果
+            // 7. Parse output results
             Map<String, Object> outputs = parseOutputs(execResult.getOutput());
-            log.info("解析输出结果: {}", outputs);
+            log.info("Parsed output results: {}", outputs);
 
             long durationMs = System.currentTimeMillis() - startTime;
 
             return SkillExecutionResult.success(outputs, execResult.getOutput(), durationMs);
 
         } catch (Exception e) {
-            log.error("执行自动化脚本异常: skillId={}", request.getSkillId(), e);
-            return SkillExecutionResult.failure("执行失败: " + e.getMessage());
+            log.error("Exception during automated script execution: skillId={}", request.getSkillId(), e);
+            return SkillExecutionResult.failure("Execution failed: " + e.getMessage());
         } finally {
             if (workDir != null) {
                 cleanupWorkDir(workDir);
@@ -120,9 +120,9 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
             while ((entry = zis.getNextEntry()) != null) {
                 Path entryPath = targetDir.resolve(entry.getName());
 
-                // 安全检查：防止zip slip攻击
+                // Security check: prevent zip slip attack
                 if (!entryPath.normalize().startsWith(targetDir.normalize())) {
-                    log.warn("跳过不安全的zip条目: {}", entry.getName());
+                    log.warn("Skipping unsafe zip entry: {}", entry.getName());
                     continue;
                 }
 
@@ -132,7 +132,7 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
                     Files.createDirectories(entryPath.getParent());
                     Files.copy(zis, entryPath, StandardCopyOption.REPLACE_EXISTING);
                     extractedFiles.add(entry.getName());
-                    log.debug("解压文件: {}", entry.getName());
+                    log.debug("Extracted file: {}", entry.getName());
                 }
             }
         }
@@ -198,7 +198,7 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
             command.add(scriptPath.getFileName().toString());
             command.addAll(args);
 
-            log.debug("执行命令: {} in directory: {}", String.join(" ", command), scriptPath.getParent());
+            log.debug("Executing command: {} in directory: {}", String.join(" ", command), scriptPath.getParent());
 
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.directory(scriptPath.getParent().toFile());
@@ -218,20 +218,20 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
             boolean finished = process.waitFor(timeoutMs, TimeUnit.MILLISECONDS);
             if (!finished) {
                 process.destroyForcibly();
-                return ScriptExecutionResult.failure("脚本执行超时");
+                return ScriptExecutionResult.failure("Script execution timed out");
             }
 
             int exitCode = process.exitValue();
             if (exitCode != 0) {
                 return ScriptExecutionResult.failure(
-                        "脚本执行失败，退出码: " + exitCode + ", 输出: " + output
+                        "Script execution failed, exit code: " + exitCode + ", output: " + output
                 );
             }
 
             return ScriptExecutionResult.success(output.toString());
 
         } catch (Exception e) {
-            return ScriptExecutionResult.failure("执行脚本异常: " + e.getMessage());
+            return ScriptExecutionResult.failure("Script execution exception: " + e.getMessage());
         }
     }
 
@@ -267,13 +267,13 @@ public class AutomatedSkillExecutionStrategy implements SkillExecutionStrategy {
                         try {
                             Files.deleteIfExists(path);
                         } catch (IOException e) {
-                            log.trace("删除文件失败: {}", path);
+                            log.trace("Failed to delete file: {}", path);
                         }
                     });
             Files.deleteIfExists(workDir);
-            log.debug("清理临时目录: {}", workDir);
+            log.debug("Cleaned up temporary directory: {}", workDir);
         } catch (Exception e) {
-            log.warn("清理临时目录失败: {}", workDir, e);
+            log.warn("Failed to clean up temporary directory: {}", workDir, e);
         }
     }
 

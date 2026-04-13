@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * Skill执行处理器
- * 接收Kafka请求，分发到对应的执行策略
+ * Skill execution handler
+ * Receives Kafka requests, dispatches to corresponding execution strategy
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -27,22 +27,22 @@ public class SkillExecutionHandler {
     private final SkillExecutionStrategyRegistry strategyRegistry;
 
     /**
-     * 执行Skill
+     * Execute Skill
      *
-     * @param request 执行请求
-     * @return 执行结果
+     * @param request execution request
+     * @return execution result
      */
     public SkillExecutionResult execute(SkillExecutionRequest request) {
         String executionType = request.getExecutionType();
-        log.info("处理Skill执行请求: skillId={}, executionType={}", request.getSkillId(), executionType);
+        log.info("Processing Skill execution request: skillId={}, executionType={}", request.getSkillId(), executionType);
 
         SkillExecutionStrategy strategy = strategyRegistry.getStrategy(executionType);
         if (strategy == null) {
-            log.error("未找到执行策略: executionType={}", executionType);
-            return SkillExecutionResult.failure("未找到执行策略: " + executionType);
+            log.error("No execution strategy found: executionType={}", executionType);
+            return SkillExecutionResult.failure("No execution strategy found: " + executionType);
         }
 
-        log.info("使用执行策略: {}", strategy.getStrategyName());
+        log.info("Using execution strategy: {}", strategy.getStrategyName());
         return strategy.execute(request);
     }
 }

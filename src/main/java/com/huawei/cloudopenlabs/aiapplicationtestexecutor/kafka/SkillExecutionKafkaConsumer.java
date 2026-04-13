@@ -19,8 +19,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * Skill执行Kafka消费者
- * 监听执行请求topic，执行后将结果发送到响应topic
+ * Kafka consumer for Skill execution
+ * Listens to execution request topic, sends results to response topic after execution
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -37,7 +37,7 @@ public class SkillExecutionKafkaConsumer {
     private String responseTopic;
 
     /**
-     * 监听Skill执行请求
+     * Listen for Skill execution requests
      */
     @KafkaListener(
             topics = "${skill-executor.kafka.request-topic}",
@@ -45,7 +45,7 @@ public class SkillExecutionKafkaConsumer {
     )
     public void handleRequest(SkillExecutionKafkaRequest kafkaRequest) {
         String requestId = kafkaRequest.getRequestId();
-        log.info("收到Skill执行请求: requestId={}, skillId={}, executionType={}",
+        log.info("Received Skill execution request: requestId={}, skillId={}, executionType={}",
                 requestId,
                 kafkaRequest.getRequest() != null ? kafkaRequest.getRequest().getSkillId() : "null",
                 kafkaRequest.getRequest() != null ? kafkaRequest.getRequest().getExecutionType() : "null");
@@ -53,10 +53,10 @@ public class SkillExecutionKafkaConsumer {
         SkillExecutionKafkaResponse response;
 
         try {
-            // 执行Skill
+            // Execute Skill
             SkillExecutionResult result = handler.execute(kafkaRequest.getRequest());
 
-            // 构建成功响应
+            // Build success response
             response = SkillExecutionKafkaResponse.builder()
                     .requestId(requestId)
                     .executionId(kafkaRequest.getExecutionId())
@@ -71,9 +71,9 @@ public class SkillExecutionKafkaConsumer {
                     .build();
 
         } catch (Exception e) {
-            log.error("Skill执行异常: requestId={}", requestId, e);
+            log.error("Skill execution exception: requestId={}", requestId, e);
 
-            // 构建失败响应
+            // Build failure response
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
 
@@ -82,14 +82,14 @@ public class SkillExecutionKafkaConsumer {
                     .executionId(kafkaRequest.getExecutionId())
                     .nodeUuid(kafkaRequest.getNodeUuid())
                     .success(false)
-                    .errorMessage("Executor内部错误: " + e.getMessage())
+                    .errorMessage("Executor internal error: " + e.getMessage())
                     .errorStack(sw.toString())
                     .executorTimestamp(System.currentTimeMillis())
                     .build();
         }
 
-        // 发送响应到Kafka
+        // Send response to Kafka
         kafkaTemplate.send(responseTopic, requestId, response);
-        log.info("已发送Skill执行响应: requestId={}, success={}", requestId, response.isSuccess());
+        log.info("Sent Skill execution response: requestId={}, success={}", requestId, response.isSuccess());
     }
 }

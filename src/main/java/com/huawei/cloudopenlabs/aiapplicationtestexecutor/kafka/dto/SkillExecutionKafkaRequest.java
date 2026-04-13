@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Skill执行Kafka请求消息
+ * Skill execution Kafka request message
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -22,24 +22,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SkillExecutionKafkaRequest {
 
-    /** 请求ID（UUID），用于关联请求和响应 */
+    /** Request ID (UUID), used to correlate request and response */
     private String requestId;
 
-    /** 工作流执行ID */
+    /** Workflow execution ID */
     private String executionId;
 
-    /** 工作流ID */
+    /** Workflow ID */
     private String workflowId;
 
-    /** 节点UUID */
+    /** Node UUID */
     private String nodeUuid;
 
-    /** 响应topic名称 */
+    /** Response topic name */
     private String callbackTopic;
 
-    /** 请求时间戳 */
+    /** Request timestamp */
     private long timestamp;
 
-    /** Skill执行请求 */
+    /** Skill execution request */
     private SkillExecutionRequest request;
 }

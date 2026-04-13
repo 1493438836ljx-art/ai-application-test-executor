@@ -8,7 +8,7 @@ import com.huawei.cloudopenlabs.aiapplicationtestexecutor.dto.SkillExecutionRequ
 import com.huawei.cloudopenlabs.aiapplicationtestexecutor.dto.SkillExecutionResult;
 
 /**
- * Skill执行策略接口
+ * Skill execution strategy interface
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -16,23 +16,23 @@ import com.huawei.cloudopenlabs.aiapplicationtestexecutor.dto.SkillExecutionResu
 public interface SkillExecutionStrategy {
 
     /**
-     * 获取执行类型
+     * Get execution type
      * @return "AUTOMATED" / "AI"
      */
     String getExecutionType();
 
     /**
-     * 执行Skill
+     * Execute Skill
      *
-     * @param request 执行请求
-     * @return 执行结果
+     * @param request execution request
+     * @return execution result
      */
     SkillExecutionResult execute(SkillExecutionRequest request);
 
     /**
-     * 获取策略名称（用于日志）
+     * Get strategy name (for logging)
      */
     default String getStrategyName() {
-        return "默认执行策略";
+        return "Default execution strategy";
     }
 }

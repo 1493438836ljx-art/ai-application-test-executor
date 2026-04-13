@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Kafka配置类
+ * Kafka configuration class
  *
  * @author GNEEC LIVE
  * @version 27.0.1.1
@@ -35,7 +35,7 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    // ==================== Consumer 配置（接收执行请求） ====================
+    // ==================== Consumer configuration (receive execution requests) ====================
 
     @Bean
     public ConsumerFactory<String, SkillExecutionKafkaRequest> skillRequestConsumerFactory() {
@@ -61,7 +61,7 @@ public class KafkaConfig {
         return factory;
     }
 
-    // ==================== Producer 配置（发送执行响应） ====================
+    // ==================== Producer configuration (send execution responses) ====================
 
     @Bean
     public ProducerFactory<String, SkillExecutionKafkaResponse> skillResponseProducerFactory() {
